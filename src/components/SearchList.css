@@ -9,21 +9,22 @@ body {
     padding: 0;
     margin: 0;
     text-align: left;
+    background-color: #f6f6f6;
   }
   #myUL li a {
     border: 1px solid #ddd;
     margin-top: -1px; /* Prevent double borders */
-    background-color: #f6f6f6;
     padding: 12px;
     text-decoration: none;
     font-size: 18px;
     color: black;
-    display: block
+    display: block;
+    background-color: #f6f6f6;
   }
   
-  #myUL li a:hover:not(.header) {
+  /* #myUL li a:hover:not(.header) {
     background-color: #eee;
-  }
+  } */
 
   .containerList {
     position: fixed;  
@@ -66,3 +67,29 @@ body {
     top: 20%;
 }
 
+.slider {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  display: inline-block;
+}
+
+.slider > div {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  height: 50;
+  width: 0%;
+}
+
+
+.slider > div > div {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  height: 50;
+  width: 0%;
+  background: #3aea84;
+}

@@ -5,31 +5,47 @@ import './SearchPage.css';
 
 export default class SearchPage extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             search: '',
             planetData: [],
             searchPlanetData: [],
-            planetDetail:null
+            planetDetail:null,
+            nextPage:null
         };
         this.logoutUser = this.logoutUser.bind(this);
+        this.updateSearch = this.updateSearch.bind(this);
+        this.searchResultForPlanets = this.searchResultForPlanets.bind(this);
     }
     componentDidMount() {
         if (localStorage.getItem("username") == "") {
 			browserHistory.goBack();
         }
-        else {
-            this.getSelectUserPlanets()
-        }
-        
     }
     updateSearch = (e) => {
-        this.setState({search: e.target.value})
-        var array = this.state.searchPlanetData.filter(parseResult => {
-			return parseResult.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+        this.setState({search: e.target.value}, () => {
+            this.searchResultForPlanets()
         });
-		this.setState({planetData: array});
+        
       }
+    searchResultForPlanets() {
+        if (this.state.search.length === 0) {
+            setTimeout(() => {
+                this.setState({nextPage:null});
+                this.setState({planetData: [], searchPlanetData: []})    
+            }, 3000);
+            return
+        }
+        fetch(`https://swapi.co/api/planets/?search=${this.state.search}`,{
+            method: 'GET',
+            headers: {'Content-type': 'application/json'},
+        }).then(response => response.json()).then(data=> {
+           var resultData = data.results.sort((a,b) => parseInt(a.diameter) < parseInt(b.diameter));
+           this.setState({nextPage:data.next});
+           this.setState({planetData: resultData, searchPlanetData: resultData})
+          }
+        )
+    }  
      getSelectUserPlanets() {
         fetch("https://swapi.co/api/planets/").then(response => response.json()).then(data=> {
            var resultData = data.results.sort((a,b) => parseInt(a.diameter) < parseInt(b.diameter));
@@ -42,8 +58,6 @@ export default class SearchPage extends Component {
          browserHistory.replace('/searchscreen')
          browserHistory.push('/')
      }
-
-
     render() {
         const userName = localStorage.getItem("username")
         return (
@@ -56,7 +70,7 @@ export default class SearchPage extends Component {
             </div>
            </div>
          <div class="containerList">
-           <SearchList searchListData={this.state.planetData} />
+           <SearchList searchListData={this.state.planetData} nextPageData= {this.state.nextPage} />
          </div>
          </div>
         );
