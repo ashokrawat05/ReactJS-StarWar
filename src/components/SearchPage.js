@@ -11,11 +11,13 @@ export default class SearchPage extends Component {
             planetData: [],
             searchPlanetData: [],
             planetDetail:null,
-            nextPage:null
+            nextPage:null, 
+            searchCounter:0
         };
         this.logoutUser = this.logoutUser.bind(this);
         this.updateSearch = this.updateSearch.bind(this);
         this.searchResultForPlanets = this.searchResultForPlanets.bind(this);
+        // this.searchResultForPlanets()
     }
     componentDidMount() {
         if (localStorage.getItem("username") == "") {
@@ -23,13 +25,36 @@ export default class SearchPage extends Component {
         }
     }
     updateSearch = (e) => {
+        e.preventDefault();
         this.setState({search: e.target.value}, () => {
             this.searchResultForPlanets()
         });
         
       }
     searchResultForPlanets() {
-        if (this.state.search.length === 0) {
+        if ((localStorage.getItem('username')) != "Luke Skywalker") {
+          if(localStorage.getItem('searchCounter') == "NaN") {
+            localStorage.setItem('searchCounter', "0");
+          }
+          console.log(localStorage.getItem('searchCounter'))
+        
+        if (localStorage.getItem('searchCounter') == "0") {
+            localStorage.setItem('SearchDate', Date.now());
+        }
+        var aCounter = parseInt(localStorage.getItem('searchCounter')) + 1 
+        localStorage.setItem('searchCounter', aCounter);
+        if (parseInt(localStorage.getItem('searchCounter')) >= 5) {
+            console.log((((Date.now() - localStorage.getItem('SearchDate')))/1000))
+            if ((((Date.now() - localStorage.getItem('SearchDate')))/1000) < 60)  {
+                alert("Search exceeds from limit")
+                return
+            }
+            else {
+                localStorage.setItem('searchCounter', "0");
+            }
+        }
+    }
+            if (this.state.search.length === 0) {
             setTimeout(() => {
                 this.setState({nextPage:null});
                 this.setState({planetData: [], searchPlanetData: []})    
@@ -54,7 +79,10 @@ export default class SearchPage extends Component {
         )
      } 
      logoutUser() {
-         localStorage.setItem("username", "")
+         localStorage.clear()
+        //  localStorage.setItem("username", "")
+        //  localStorage.setItem("searchCounter", "0")
+        //  localStorage.setItem("SearchDate", Date.now())
          browserHistory.replace('/searchscreen')
          browserHistory.push('/')
      }
@@ -66,7 +94,7 @@ export default class SearchPage extends Component {
             <div class="search-container">    
                   <label class="label" for="uname"><b>Welcome, {localStorage.getItem("username")}</b></label> 
                   <a  href="javascript:void(0);" onClick={this.logoutUser} class="logout">Logout</a>
-                <input type="text" placeholder="Search here..." ref={input => this.search = input} onChange={this.updateSearch} />
+                <input type="text" placeholder="Search planet here" ref={input => this.search = input} onChange={this.updateSearch} />
             </div>
            </div>
          <div class="containerList">

@@ -3,6 +3,7 @@ import { browserHistory} from 'react-router';
 import DetailInfo from './DetailInfo.js';
 import './SearchList.css';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { parse } from "querystring";
 
 export default class SearchList extends Component {
     constructor(props) {
@@ -29,8 +30,8 @@ export default class SearchList extends Component {
         this.getPercentageForPlanets()
     }
     openDetailPage(e)  {
-        let array = this.state.searchListPlanet.filter(parseResult => {
-            return (parseResult.name == e.currentTarget.textContent) 
+            let array = this.state.searchListPlanet.filter(parseResult => {
+            return (parseResult.name == e.currentTarget.title) 
 		});
         this.setState({planetDetail: array[0]}, () =>
              { if (this.state.planetDetail !=null) {
@@ -74,7 +75,7 @@ export default class SearchList extends Component {
                <DetailInfo planetDetail={this.state.planetDetail} />
              </div> : null} 
              </div>           
-       <div id="scrollableDiv" style={{ height: 515, overflow: "auto" }}>
+       <div id="scrollableDiv" style={{overflow: "auto" }}>
           <InfiniteScroll
             dataLength={this.state.searchListPlanet.length}
             next={this.paginationSearchResultCall}
@@ -83,15 +84,15 @@ export default class SearchList extends Component {
                    <b>Loading more results ...</b>
                    </p>}
             scrollableTarget="scrollableDiv"
+            height={515}
           >
             <ul id="myUL"> {this.state.searchListPlanet.map((parseResult) => 
                {
                 const width = (parseResult.population/(this.getPercentageForPlanets())) * 100  
                 return (
-                
-                 <div value={parseResult} style={{position:'relative',height: 53,borderWidth:0.5,borderStyle:'solid' }} onClick={this.openDetailPage} >  
-                 {/* <a href="#">{parseResult.name}</a> */}
-                 <label style={{marginTop:12, marginLeft:20, position:'absolute'}}>{parseResult.name + "\n" + parseResult.population}</label>
+                 <div title={parseResult.name} value={parseResult} style={{position:'relative',height: 53,borderWidth:0.5,borderStyle:'solid' }} onClick={this.openDetailPage} >  
+                 <label style={{marginTop:8, marginLeft:20, position:'absolute',fontSize: '17px',fontWeight: 'bold'}}>{parseResult.name}</label>
+                 <label style={{marginTop:30, marginLeft:20, position:'absolute',fontSize: '13px'}}>{"("+parseResult.population+")"}</label>
                  <div style={{display:'inline-block',marginLeft:1,marginRight:2,backgroundColor:'#3aea84',height: 53, width: `${width}%`}}></div>
                  </div>
                  
@@ -99,24 +100,8 @@ export default class SearchList extends Component {
                 }
               )}
              </ul>
-
-             {/* <div class="slider"> 
-             {
-                this.state.searchListPlanet.map((parseResult) => 
-               {
-                const width = (parseResult.population/(this.getPercentageForPlanets())) * 100 
-                return(
-                <div onClick={this.openDetailPage}>
-                <label style={{marginTop:12, marginLeft:20, position:'absolute'}}>{parseResult.name}</label>
-                <div style={{width: `${width}%` }} />
-                </div>
-                )}
-             )}
-           </div> */}
-
           </InfiniteScroll>
         </div>
-
            </div> 
         );
     }
