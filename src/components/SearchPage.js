@@ -4,6 +4,7 @@ import SearchList from './SearchList.js';
 import './SearchPage.css';
 
 export default class SearchPage extends Component {
+    abortController = new window.AbortController();
     constructor(props) {
         super(props);
         this.state = {
@@ -25,7 +26,9 @@ export default class SearchPage extends Component {
         }
     }
     updateSearch = (e) => {
+        this.abortController.abort();
         e.preventDefault();
+        
         this.setState({search: e.target.value}, () => {
             this.searchResultForPlanets()
         });
@@ -61,10 +64,11 @@ export default class SearchPage extends Component {
             }, 3000);
             return
         }
-        fetch(`https://swapi.co/api/planets/?search=${this.state.search}`,{
-            method: 'GET',
-            headers: {'Content-type': 'application/json'},
-        }).then(response => response.json()).then(data=> {
+    this.abortController = new window.AbortController();
+    fetch(`https://swapi.co/api/planets/?search=${this.state.search}`,{
+      method: 'get',
+      signal: this.abortController.signal,
+    }).then(response => response.json()).then(data=> {
            var resultData = data.results.sort((a,b) => parseInt(a.diameter) < parseInt(b.diameter));
            this.setState({nextPage:data.next});
            this.setState({planetData: resultData, searchPlanetData: resultData})
