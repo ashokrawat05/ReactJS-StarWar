@@ -85,9 +85,9 @@ class Login extends Component {
          <h1 className="App-title">STAR WARS</h1>
       </header>
       <label for="uname"><b>Username</b></label>
-      <input type="text" placeholder="Enter username" required value={this.state.username} onChange={(text)=>{this.handleUserName(text)}} />
+      <input type="text" placeholder="username" required value={this.state.username} onChange={(text)=>{this.handleUserName(text)}} />
       <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter password" name="psw" required value={this.state.password} onChange={(text)=>{this.handlePassword(text)}} />
+      <input type="password" placeholder="password" name="psw" required value={this.state.password} onChange={(text)=>{this.handlePassword(text)}} />
       <button disabled={!enabled}  onClick={this.loginSubmit} >Login</button>
     </div>
     <div class="loader" id="loderIndicator"></div>

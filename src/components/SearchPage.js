@@ -18,7 +18,7 @@ export default class SearchPage extends Component {
         this.logoutUser = this.logoutUser.bind(this);
         this.updateSearch = this.updateSearch.bind(this);
         this.searchResultForPlanets = this.searchResultForPlanets.bind(this);
-        // this.searchResultForPlanets()
+        this.searchResultForPlanets()
     }
     componentDidMount() {
         if (localStorage.getItem("username") == "") {
@@ -57,13 +57,13 @@ export default class SearchPage extends Component {
             }
         }
     }
-            if (this.state.search.length === 0) {
-            setTimeout(() => {
-                this.setState({nextPage:null});
-                this.setState({planetData: [], searchPlanetData: []})    
-            }, 3000);
-            return
-        }
+        //     if (this.state.search.length === 0) {
+        //     setTimeout(() => {
+        //         this.setState({nextPage:null});
+        //         this.setState({planetData: [], searchPlanetData: []})    
+        //     }, 3000);
+        //     return
+        // }
     this.abortController = new window.AbortController();
     fetch(`https://swapi.co/api/planets/?search=${this.state.search}`,{
       method: 'get',
@@ -84,9 +84,9 @@ export default class SearchPage extends Component {
      } 
      logoutUser() {
          localStorage.clear()
-        //  localStorage.setItem("username", "")
-        //  localStorage.setItem("searchCounter", "0")
-        //  localStorage.setItem("SearchDate", Date.now())
+         localStorage.setItem("username", "")
+         localStorage.setItem("searchCounter", "0")
+         localStorage.setItem("SearchDate", Date.now())
          browserHistory.replace('/searchscreen')
          browserHistory.push('/')
      }
